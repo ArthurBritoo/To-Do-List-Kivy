@@ -6,7 +6,7 @@ from classes.tela_tarefa import TelaTarefa
 
 class GerenciadorTarefas(App):
     def build(self):
-        gerenciador = ScreenManager(transition=FadeTransition(duration=0.1))
+        gerenciador = ScreenManager(transition=FadeTransition(duration=0.5))
         gerenciador.add_widget(TelaBoasVindas(name='boas_vindas'))
         gerenciador.add_widget(TelaMenu(name='menu'))
         gerenciador.add_widget(TelaTarefa(name='tarefa'))
