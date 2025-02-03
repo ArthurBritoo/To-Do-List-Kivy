@@ -15,3 +15,14 @@ def carregar_tarefas():
 def salvar_tarefas(tarefas):
     with open('tarefas.json', 'w', encoding='utf-8') as arquivo:
         json.dump(tarefas, arquivo, indent=4, ensure_ascii=False)
+
+def salvar_tarefas_concluidas(tarefas_concluidas):
+    with open('tarefas_concluidas.json', 'w', encoding='utf-8') as arquivo:
+        json.dump(tarefas_concluidas, arquivo, indent=4, ensure_ascii=False)
+
+def carregar_tarefas_concluidas():
+    try:
+        with open('tarefas_concluidas.json', 'r', encoding='utf-8') as arquivo:
+            return json.load(arquivo)
+    except FileNotFoundError:
+        return []
