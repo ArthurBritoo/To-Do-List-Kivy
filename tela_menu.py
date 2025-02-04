@@ -4,7 +4,6 @@ from kivy.uix.checkbox import CheckBox
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import Screen
-from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
 from datetime import datetime, timedelta
@@ -66,6 +65,12 @@ class TelaMenu(Screen):
         # Exibir tarefas iniciais
         self.atualizar_lista_tarefas()
 
+        # Verificar vencimento ao carregar a tela
+        self.verificar_vencimento_tarefas()
+
+        # Iniciar verificação periódica de vencimento de tarefas
+        Clock.schedule_interval(self.verificar_vencimento_tarefas, 60)  # Verifica a cada 60 segundos
+
     def _update_rect(self, *args):
         self.rect.pos = self.pos
         self.rect.size = self.size
@@ -105,21 +110,9 @@ class TelaMenu(Screen):
                 checkbox = CheckBox(active=tarefa.get('concluida', False), size_hint_y=None, height=40)
                 checkbox.bind(active=lambda instancia, valor, indice_tarefa=indice: self.alternar_tarefa(indice_tarefa, valor))
 
-                # Adicionando borda manualmente para tarefas pendentes
-                with checkbox.canvas.before:
-                    Color(0, 0, 1, 1)  # Cor azul para a borda
-                    self.borda_rect = Rectangle(pos=checkbox.pos, size=checkbox.size)
-
-                def atualizar_borda(instance, value):
-                    self.borda_rect.pos = instance.pos
-                    self.borda_rect.size = instance.size
-
-                checkbox.bind(pos=atualizar_borda)
-                checkbox.bind(size=atualizar_borda)
-
                 layout_tarefa.add_widget(checkbox)
             else:
-                # Caixa de seleção visível e desabilitada para tarefas concluídas, com mais destaque
+                # Caixa de seleção visível e desabilitada para tarefas concluídas
                 checkbox = CheckBox(
                     active=True, 
                     size_hint_y=None, 
@@ -147,12 +140,7 @@ class TelaMenu(Screen):
 
             self.lista_tarefas_layout.add_widget(layout_tarefa)
 
-            # Enviar notificação se a tarefa estiver vencendo (somente para pendentes)
-            if self.mostrando_pendentes and tarefa.get('data_vencimento') and self.tarefa_vencendo(tarefa['data_vencimento']):
-                enviar_notificacao(tarefa['texto'])
-
     def alternar_tarefa(self, indice_tarefa, valor):
-        """ Alterna o estado de uma tarefa (pendente ou concluída) com atraso de 5 segundos """
         if self.mostrando_pendentes:
             tarefa = self.tarefas[indice_tarefa]
             tarefa['concluida'] = valor
@@ -164,12 +152,9 @@ class TelaMenu(Screen):
 
             salvar_tarefas(self.tarefas)
             self.atualizar_lista_tarefas()
-        else:
-            # Não faz sentido alterar o estado das tarefas concluídas
-            pass
 
     def mover_para_concluidas(self, indice_tarefa):
-        """ Move uma tarefa concluída para o arquivo de tarefas concluídas """
+        #Move uma tarefa concluída para o arquivo de tarefas concluídas
         if 0 <= indice_tarefa < len(self.tarefas):
             tarefa_concluida = self.tarefas.pop(indice_tarefa)
 
@@ -181,20 +166,30 @@ class TelaMenu(Screen):
             self.atualizar_lista_tarefas()
 
     def remover_tarefa_concluida(self, indice_tarefa):
-        """ Remove uma tarefa da lista de tarefas concluídas """
+       #Remove uma tarefa da lista de tarefas concluídas
         tarefas_concluidas = carregar_tarefas_concluidas()
         if 0 <= indice_tarefa < len(tarefas_concluidas):
             del tarefas_concluidas[indice_tarefa]
             salvar_tarefas_concluidas(tarefas_concluidas)
             self.atualizar_lista_tarefas()
 
+    def verificar_vencimento_tarefas(self, dt=None):
+        #Verifica se há tarefas vencendo e envia notificações
+        tarefas = carregar_tarefas()
+        hoje = datetime.now().date()  # Obtém a data atual sem o horário
+
+        for tarefa in tarefas:
+            if tarefa.get('data_vencimento'):
+                data_vencimento = datetime.strptime(tarefa['data_vencimento'], '%d/%m/%Y').date()
+
+                if hoje == data_vencimento and not tarefa.get('notificacao_enviada', False):
+                    enviar_notificacao(tarefa['texto'])
+                    tarefa['notificacao_enviada'] = True  # Marca a tarefa como notificada
+                    salvar_tarefas(tarefas)  # Salva a alteração no arquivo
+
     def tarefa_vencendo(self, data_vencimento_str):
-        """Verifica se a tarefa está perto do vencimento (um dia antes ou no próprio dia)"""
-        data_vencimento = datetime.strptime(data_vencimento_str, '%d/%m/%Y')
-        agora = datetime.now()
+        #Verifica se a tarefa está perto do vencimento (um dia antes ou no próprio dia)
+        data_vencimento = datetime.strptime(data_vencimento_str, '%d/%m/%Y').date()
+        hoje = datetime.now().date()
 
-        # Considera toda a data sem se preocupar com a hora
-        data_vencimento = data_vencimento.replace(hour=23, minute=59, second=59)
-        data_limite = data_vencimento - timedelta(days=1)
-
-        return data_limite <= agora <= data_vencimento
+        return hoje == data_vencimento
