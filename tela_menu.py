@@ -10,15 +10,19 @@ from kivy.graphics import Color, Rectangle
 from datetime import datetime, timedelta
 from manipulador_json import carregar_tarefas, salvar_tarefas, salvar_tarefas_concluidas, carregar_tarefas_concluidas
 from notificacoes import enviar_notificacao
+from kivymd.uix.button import MDFlatButton  # Botão com ícone do KivyMD
+from kivy.core.text import LabelBase
+from kivymd.uix.button import MDIconButton
+
 
 class TelaMenu(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        
+
         with self.canvas.before:
             Color(1, 1, 1, 1)  # Fundo branco
             self.rect = Rectangle(size=self.size, pos=self.pos)
-        
+
         self.bind(size=self._update_rect, pos=self._update_rect)
 
         self.mostrando_pendentes = True  # Começa mostrando tarefas pendentes
@@ -96,13 +100,33 @@ class TelaMenu(Screen):
         for indice, tarefa in enumerate(tarefas):
             layout_tarefa = BoxLayout(orientation='horizontal', size_hint_y=None, height=40)
 
-            # Se for lista de tarefas concluídas, CheckBox sempre marcada
+            # Se for lista de tarefas pendentes
             if self.mostrando_pendentes:
                 checkbox = CheckBox(active=tarefa.get('concluida', False), size_hint_y=None, height=40)
                 checkbox.bind(active=lambda instancia, valor, indice_tarefa=indice: self.alternar_tarefa(indice_tarefa, valor))
+
+                # Adicionando borda manualmente para tarefas pendentes
+                with checkbox.canvas.before:
+                    Color(0, 0, 1, 1)  # Cor azul para a borda
+                    self.borda_rect = Rectangle(pos=checkbox.pos, size=checkbox.size)
+
+                def atualizar_borda(instance, value):
+                    self.borda_rect.pos = instance.pos
+                    self.borda_rect.size = instance.size
+
+                checkbox.bind(pos=atualizar_borda)
+                checkbox.bind(size=atualizar_borda)
+
                 layout_tarefa.add_widget(checkbox)
             else:
-                checkbox = CheckBox(active=True, size_hint_y=None, height=40, disabled=True)
+                # Caixa de seleção visível e desabilitada para tarefas concluídas, com mais destaque
+                checkbox = CheckBox(
+                    active=True, 
+                    size_hint_y=None, 
+                    height=40, 
+                    disabled=True, 
+                    color=(0, 1, 0, 1),  
+                )
                 layout_tarefa.add_widget(checkbox)
 
             rotulo_tarefa = Label(text=tarefa['texto'], size_hint_y=None, height=40, font_size='24sp', color=(0, 0, 0, 1))
@@ -110,7 +134,14 @@ class TelaMenu(Screen):
 
             # Adiciona um botão de lixeira para excluir tarefa concluída
             if not self.mostrando_pendentes:
-                botao_lixeira = Button(text="🗑️", size_hint_x=None, width=50, background_color=(1, 0, 0, 1))
+                botao_lixeira = MDIconButton(
+                    icon="delete-outline",  # Ícone de lixeira
+                    size_hint_x=None,
+                    width=50,  # Defina uma largura suficiente
+                    theme_text_color="Custom",
+                    text_color=(1, 0, 0, 1),  # Cor vermelha
+                    pos_hint={"center_y": 0.5}  # Ajuste a posição vertical
+                )
                 botao_lixeira.bind(on_press=lambda instancia, indice_tarefa=indice: self.remover_tarefa_concluida(indice_tarefa))
                 layout_tarefa.add_widget(botao_lixeira)
 
@@ -120,15 +151,22 @@ class TelaMenu(Screen):
             if self.mostrando_pendentes and tarefa.get('data_vencimento') and self.tarefa_vencendo(tarefa['data_vencimento']):
                 enviar_notificacao(tarefa['texto'])
 
-    def alternar_tarefa(self, indice_tarefa, concluida):
-        """ Marca uma tarefa como concluída e move para a lista de tarefas concluídas """
-        if 0 <= indice_tarefa < len(self.tarefas) and self.mostrando_pendentes:
-            if concluida:
+    def alternar_tarefa(self, indice_tarefa, valor):
+        """ Alterna o estado de uma tarefa (pendente ou concluída) com atraso de 5 segundos """
+        if self.mostrando_pendentes:
+            tarefa = self.tarefas[indice_tarefa]
+            tarefa['concluida'] = valor
+
+            # Só move a tarefa para concluída se foi marcada
+            if valor:
+                # Atraso de 5 segundos antes de mover para concluídas
                 Clock.schedule_once(lambda dt: self.mover_para_concluidas(indice_tarefa), 5)
-            else:
-                self.tarefas[indice_tarefa]['concluida'] = False
-                salvar_tarefas(self.tarefas)
-                self.atualizar_lista_tarefas()
+
+            salvar_tarefas(self.tarefas)
+            self.atualizar_lista_tarefas()
+        else:
+            # Não faz sentido alterar o estado das tarefas concluídas
+            pass
 
     def mover_para_concluidas(self, indice_tarefa):
         """ Move uma tarefa concluída para o arquivo de tarefas concluídas """

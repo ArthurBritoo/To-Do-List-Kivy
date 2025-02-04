@@ -50,7 +50,6 @@ class TelaTarefa(Screen):
         date_dialog.open()
 
     def on_save(self, instance, value, date_range):
-        """ Callback que recebe a data selecionada """
         self.entrada_data.text = value.strftime('%d/%m/%Y')
 
     def adicionar_tarefa(self, instancia):
