@@ -69,7 +69,7 @@ class TelaMenu(Screen):
         self.verificar_vencimento_tarefas()
 
         # Iniciar verificação periódica de vencimento de tarefas
-        Clock.schedule_interval(self.verificar_vencimento_tarefas, 60)  # Verifica a cada 60 segundos
+        Clock.schedule_interval(self.verificar_vencimento_tarefas, 10)  # Verifica a cada 60 segundos
 
     def _update_rect(self, *args):
         self.rect.pos = self.pos
@@ -178,14 +178,22 @@ class TelaMenu(Screen):
         tarefas = carregar_tarefas()
         hoje = datetime.now().date()  # Obtém a data atual sem o horário
 
+    def verificar_vencimento_tarefas(self, dt=None):
+        # Verifica se há tarefas vencendo e envia notificações
+        tarefas = carregar_tarefas()
+        hoje = datetime.now().date()  # Obtém a data atual sem o horário
+
         for tarefa in tarefas:
             if tarefa.get('data_vencimento'):
                 data_vencimento = datetime.strptime(tarefa['data_vencimento'], '%d/%m/%Y').date()
 
+                # Verifica se a tarefa vence hoje e se ainda não foi notificada
                 if hoje == data_vencimento and not tarefa.get('notificacao_enviada', False):
                     enviar_notificacao(tarefa['texto'])
                     tarefa['notificacao_enviada'] = True  # Marca a tarefa como notificada
-                    salvar_tarefas(tarefas)  # Salva a alteração no arquivo
+
+                    # Salvar mudanças no JSON apenas se houver alteração
+                    salvar_tarefas(tarefas)
 
     def tarefa_vencendo(self, data_vencimento_str):
         #Verifica se a tarefa está perto do vencimento (um dia antes ou no próprio dia)
