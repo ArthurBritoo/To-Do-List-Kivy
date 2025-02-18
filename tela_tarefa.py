@@ -19,7 +19,7 @@ class TelaTarefa(Screen):
         self.entrada_data = TextInput(hint_text='Escolha uma data', size_hint_y=None, height=40, readonly=True)
         layout.add_widget(self.entrada_data)
 
-        # Botão para abrir o calendário
+        # botão para abrir o calendário
         botao_data = Button(text="Selecionar Data", size_hint_y=None, height=40, background_color=(0, 0, 1, 1))
         botao_data.bind(on_press=self.show_date_picker)
         layout.add_widget(botao_data)
@@ -35,7 +35,7 @@ class TelaTarefa(Screen):
         self.add_widget(layout)
 
         with self.canvas.before:
-            Color(1, 1, 1, 1)  # Cor de fundo (branco)
+            Color(1, 1, 1, 1)  # branco
             self.rect = Rectangle(size=self.size, pos=self.pos)
         self.bind(size=self._update_rect, pos=self._update_rect)
 
@@ -44,7 +44,7 @@ class TelaTarefa(Screen):
         self.rect.size = self.size
 
     def show_date_picker(self, instance):
-        """ Abre o seletor de data """
+        # abre o seletor de data
         date_dialog = MDDatePicker()
         date_dialog.bind(on_save=self.on_save)
         date_dialog.open()

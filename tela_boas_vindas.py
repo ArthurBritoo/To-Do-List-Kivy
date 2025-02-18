@@ -8,7 +8,6 @@ class TelaBoasVindas(Screen):
         super().__init__(**kwargs)
         
         with self.canvas.before:
-            # Cor de fundo (branco)
             Color(1, 1, 1, 1)  
             self.rect = Rectangle(size=self.size, pos=self.pos)
         

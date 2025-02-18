@@ -9,7 +9,7 @@ from kivy.graphics import Color, Rectangle
 from datetime import datetime, timedelta
 from manipulador_json import carregar_tarefas, salvar_tarefas, salvar_tarefas_concluidas, carregar_tarefas_concluidas
 from notificacoes import enviar_notificacao
-from kivymd.uix.button import MDFlatButton  # Botão com ícone do KivyMD
+from kivymd.uix.button import MDFlatButton  
 from kivy.core.text import LabelBase
 from kivymd.uix.button import MDIconButton
 
@@ -19,22 +19,22 @@ class TelaMenu(Screen):
         super().__init__(**kwargs)
 
         with self.canvas.before:
-            Color(1, 1, 1, 1)  # Fundo branco
+            Color(1, 1, 1, 1)  # branco
             self.rect = Rectangle(size=self.size, pos=self.pos)
 
         self.bind(size=self._update_rect, pos=self._update_rect)
 
-        self.mostrando_pendentes = True  # Começa mostrando tarefas pendentes
+        self.mostrando_pendentes = True  #começa mostrando tarefas pendentes
         self.tarefas = carregar_tarefas()
         self.tarefas_concluidas = carregar_tarefas_concluidas()
 
         layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
 
-        # Título da tela
+        # Título 
         self.rotulo_titulo = Label(text="Lista de Tarefas Pendentes", font_size=24, size_hint_y=None, height=40, color=(0, 0, 0, 1))
         layout.add_widget(self.rotulo_titulo)
 
-        # Botões para alternar entre tarefas pendentes e concluídas
+        # botões para alternar entre tarefas pendentes e concluídas
         botao_pendentes = Button(text="Ver Tarefas Pendentes", size_hint_y=None, height=40, background_color=(0, 1, 0, 1))
         botao_pendentes.bind(on_press=self.mostrar_pendentes)
         layout.add_widget(botao_pendentes)
@@ -68,8 +68,8 @@ class TelaMenu(Screen):
         # Verificar vencimento ao carregar a tela
         self.verificar_vencimento_tarefas()
 
-        # Iniciar verificação periódica de vencimento de tarefas
-        Clock.schedule_interval(self.verificar_vencimento_tarefas, 10)  # Verifica a cada 60 segundos
+        # Iniciar verificação a cada 10s de vencimento de tarefas
+        Clock.schedule_interval(self.verificar_vencimento_tarefas, 10)  
 
     def _update_rect(self, *args):
         self.rect.pos = self.pos
@@ -82,19 +82,19 @@ class TelaMenu(Screen):
         self.manager.current = 'boas_vindas'
 
     def mostrar_pendentes(self, instancia):
-        """ Alterna para exibir tarefas pendentes """
+        #alterna para exibir tarefas pendentes
         self.mostrando_pendentes = True
         self.rotulo_titulo.text = "Lista de Tarefas Pendentes"
         self.atualizar_lista_tarefas()
 
     def mostrar_concluidas(self, instancia):
-        """ Alterna para exibir tarefas concluídas """
+        #Alterna para exibir tarefas concluídas
         self.mostrando_pendentes = False
         self.rotulo_titulo.text = "Lista de Tarefas Concluídas"
         self.atualizar_lista_tarefas()
 
     def atualizar_lista_tarefas(self):
-        """ Atualiza a lista de tarefas exibida no menu """
+        # Atualiza a lista de tarefas exibida no menu
         self.lista_tarefas_layout.clear_widgets()
 
         if self.mostrando_pendentes:
@@ -112,7 +112,7 @@ class TelaMenu(Screen):
 
                 layout_tarefa.add_widget(checkbox)
             else:
-                # Caixa de seleção visível e desabilitada para tarefas concluídas
+                # checkbox visivel para tarefas concluídas
                 checkbox = CheckBox(
                     active=True, 
                     size_hint_y=None, 
@@ -125,15 +125,15 @@ class TelaMenu(Screen):
             rotulo_tarefa = Label(text=tarefa['texto'], size_hint_y=None, height=40, font_size='24sp', color=(0, 0, 0, 1))
             layout_tarefa.add_widget(rotulo_tarefa)
 
-            # Adiciona um botão de lixeira para excluir tarefa concluída
+            # botão de lixeira para excluir tarefa concluída
             if not self.mostrando_pendentes:
                 botao_lixeira = MDIconButton(
                     icon="delete-outline",  # Ícone de lixeira
                     size_hint_x=None,
-                    width=50,  # Defina uma largura suficiente
+                    width=50,  # largura
                     theme_text_color="Custom",
-                    text_color=(1, 0, 0, 1),  # Cor vermelha
-                    pos_hint={"center_y": 0.5}  # Ajuste a posição vertical
+                    text_color=(1, 0, 0, 1),  # vermelho
+                    pos_hint={"center_y": 0.5}  # posição vertical
                 )
                 botao_lixeira.bind(on_press=lambda instancia, indice_tarefa=indice: self.remover_tarefa_concluida(indice_tarefa))
                 layout_tarefa.add_widget(botao_lixeira)
@@ -145,16 +145,16 @@ class TelaMenu(Screen):
             tarefa = self.tarefas[indice_tarefa]
             tarefa['concluida'] = valor
 
-            # Só move a tarefa para concluída se foi marcada
+            # So move a tarefa para concluída se foi marcada
             if valor:
-                # Atraso de 5 segundos antes de mover para concluídas
+                # Atraso de 5 segundos
                 Clock.schedule_once(lambda dt: self.mover_para_concluidas(indice_tarefa), 5)
 
             salvar_tarefas(self.tarefas)
             self.atualizar_lista_tarefas()
 
     def mover_para_concluidas(self, indice_tarefa):
-        #Move uma tarefa concluída para o arquivo de tarefas concluídas
+        #move uma tarefa concluída para o arquivo de tarefas concluídas
         if 0 <= indice_tarefa < len(self.tarefas):
             tarefa_concluida = self.tarefas.pop(indice_tarefa)
 
@@ -176,23 +176,18 @@ class TelaMenu(Screen):
     def verificar_vencimento_tarefas(self, dt=None):
         #Verifica se há tarefas vencendo e envia notificações
         tarefas = carregar_tarefas()
-        hoje = datetime.now().date()  # Obtém a data atual sem o horário
-
-    def verificar_vencimento_tarefas(self, dt=None):
-        # Verifica se há tarefas vencendo e envia notificações
-        tarefas = carregar_tarefas()
-        hoje = datetime.now().date()  # Obtém a data atual sem o horário
+        hoje = datetime.now().date()  #data atual
 
         for tarefa in tarefas:
             if tarefa.get('data_vencimento'):
                 data_vencimento = datetime.strptime(tarefa['data_vencimento'], '%d/%m/%Y').date()
 
-                # Verifica se a tarefa vence hoje e se ainda não foi notificada
+                # ver se a tarefa vence hoje e se ainda não foi notificada
                 if hoje == data_vencimento and not tarefa.get('notificacao_enviada', False):
                     enviar_notificacao(tarefa['texto'])
-                    tarefa['notificacao_enviada'] = True  # Marca a tarefa como notificada
+                    tarefa['notificacao_enviada'] = True  # tarefa notificada
 
-                    # Salvar mudanças no JSON apenas se houver alteração
+                    # salva no json se houver alteração
                     salvar_tarefas(tarefas)
 
     def tarefa_vencendo(self, data_vencimento_str):
