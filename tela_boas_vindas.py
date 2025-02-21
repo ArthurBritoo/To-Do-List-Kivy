@@ -3,19 +3,22 @@ from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import Screen
 from kivy.graphics import Color, Rectangle
+from kivy.core.window import Window
+
 class TelaBoasVindas(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         
-        with self.canvas.before:
-            Color(1, 1, 1, 1)  
-            self.rect = Rectangle(size=self.size, pos=self.pos)
+        with self.canvas.before: 
+            self.bg = Rectangle(source="classes/fundo3.jpg", size=Window.size, pos=self.pos)
         
         self.bind(size=self._update_rect, pos=self._update_rect)
 
     def _update_rect(self, *args):
-        self.rect.pos = self.pos
-        self.rect.size = self.size
+        # Corrigindo a posição e o tamanho da imagem
+        if hasattr(self, 'bg'):
+            self.bg.pos = self.pos
+            self.bg.size = self.size
         
         layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
 
