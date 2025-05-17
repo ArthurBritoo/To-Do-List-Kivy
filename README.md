@@ -59,7 +59,7 @@ Execute o aplicativo:
 
 python main.py
 
-🛠️ Requisitos
+## 🛠️ Requisitos
 
 Python 3.7 ou superior
 
@@ -71,7 +71,7 @@ KivyMD
 
 Plyer
 
-📌 Observações
+## 📌 Observações
 O sistema de notificações pode variar de acordo com o sistema operacional. Certifique-se de que as permissões necessárias estão concedidas para o envio de notificações.
 
 Este projeto é uma base para futuras melhorias, como integração com bancos de dados, sincronização em nuvem e autenticação de usuários.
