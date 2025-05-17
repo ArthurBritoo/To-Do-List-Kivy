@@ -22,13 +22,14 @@ Este sistema garante que o usuário seja constantemente lembrado de suas tarefas
 
 ## 📁 Estrutura do Projeto
 
+<pre lang="markdown"> 
 To-Do-List-Kivy/
 ├── classes/
 │ └── (componentes personalizados e layouts)
 ├── main.py
 ├── manipulador_json.py
 ├── notificacoes.py
-└── README.md
+└── README.md  </pre>
 
 
 
