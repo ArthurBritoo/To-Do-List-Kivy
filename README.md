@@ -26,6 +26,8 @@ Este sistema garante que o usuário seja constantemente lembrado de suas tarefas
 To-Do-List-Kivy/
 ├── classes/
 │   └── (componentes personalizados e layouts)
+├── prints
+   └── (prints do aplicativo em execução)
 ├── main.py
 ├── manipulador_json.py
 ├── notificacoes.py
@@ -86,43 +88,43 @@ Este projeto é uma base para futuras melhorias, como integração com bancos de
 Abaixo, algumas imagens demonstrando o funcionamento do aplicativo:
 
 ### 🧾 Tela Principal – Lista de Tarefas  
-Exibe todas as tarefas ativas e concluídas com ordenação por vencimento.  
+Tela de boas-vindas do aplicativo "Gerenciador de Tarefas", exibindo o nome do app, o ícone principal e o botão “Entrar”. 
 ![Tela Principal](prints/Captura_de_tela_2025-02-24_225009.png)
 
 ---
 
-### ➕ Adição de Nova Tarefa  
-Permite ao usuário inserir título, descrição, data e horário de vencimento.  
+### 📄 Menu Principal  
+Tela que oferece as principais funcionalidades do aplicativo: visualizar tarefas pendentes ou concluídas, adicionar nova tarefa ou voltar à tela inicial.  
 ![Nova Tarefa](prints/Captura_de_tela_2025-02-24_225048.png)
 
 ---
 
-### 🛠️ Edição de Tarefa Existente  
+### ➕ Tela de Adicionar Tarefa  
 Interface para editar uma tarefa previamente adicionada.  
 ![Editar Tarefa](prints/Captura_de_tela_2025-02-24_225109.png)
 
 ---
 
-### 🔔 Notificação de Tarefa Pendente  
-Notificação automática gerada para lembrar o usuário de tarefas próximas ou atrasadas.  
+### 📅 Seleção de Data
+Janela de calendário que permite ao usuário selecionar a data de vencimento da tarefa de forma visual e intuitiva. 
 ![Notificação](prints/Captura_de_tela_2025-02-24_225157.png)
 
 ---
 
-### ✅ Tarefa Marcada como Concluída  
-Exemplo de uma tarefa que já foi finalizada.  
+### 🕗 Seleção de Horário  
+Janela de relógio para seleção do horário da tarefa, com opção de escolher entre AM e PM.  
 ![Tarefa Concluída](prints/Captura_de_tela_2025-02-24_225212.png)
 
 ---
 
-### 📅 Organização Cronológica  
-As tarefas são ordenadas de forma automática pela proximidade do vencimento.  
+### ☑ Tarefa Adicionada  
+Exibição de uma tarefa recém-adicionada na lista de tarefas pendentes, mostrando título, data e hora de vencimento.  
 ![Organização](prints/Captura_de_tela_2025-02-24_225232.png)
 
 ---
 
-### 🌙 Interface com Suporte a Temas  
-Visual moderno com suporte para modo escuro.  
+###  ✅ Tarefa Concluída  
+Exibição de uma tarefa marcada como concluída, agora visível na aba de tarefas concluídas, com opção de exclusão.
 ![Modo Escuro](prints/Captura_de_tela_2025-02-24_225255.png)
 
 ---
