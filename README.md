@@ -87,44 +87,42 @@ Abaixo, algumas imagens demonstrando o funcionamento do aplicativo:
 
 ### 🧾 Tela Principal – Lista de Tarefas  
 Exibe todas as tarefas ativas e concluídas com ordenação por vencimento.  
-![Tela Principal](./prints/Captura_de_tela_2025-02-24_225009.png)
+![Tela Principal](prints/Captura_de_tela_2025-02-24_225009.png)
 
 ---
 
 ### ➕ Adição de Nova Tarefa  
 Permite ao usuário inserir título, descrição, data e horário de vencimento.  
-![Nova Tarefa](./prints/Captura_de_tela_2025-02-24_225048.png)
+![Nova Tarefa](prints/Captura_de_tela_2025-02-24_225048.png)
 
 ---
 
 ### 🛠️ Edição de Tarefa Existente  
 Interface para editar uma tarefa previamente adicionada.  
-![Editar Tarefa](./prints/Captura_de_tela_2025-02-24_225109.png)
+![Editar Tarefa](prints/Captura_de_tela_2025-02-24_225109.png)
 
 ---
 
 ### 🔔 Notificação de Tarefa Pendente  
 Notificação automática gerada para lembrar o usuário de tarefas próximas ou atrasadas.  
-![Notificação](./prints/Captura_de_tela_2025-02-24_225157.png)
+![Notificação](prints/Captura_de_tela_2025-02-24_225157.png)
 
 ---
 
 ### ✅ Tarefa Marcada como Concluída  
 Exemplo de uma tarefa que já foi finalizada.  
-![Tarefa Concluída](./prints/Captura_de_tela_2025-02-24_225212.png)
+![Tarefa Concluída](prints/Captura_de_tela_2025-02-24_225212.png)
 
 ---
 
 ### 📅 Organização Cronológica  
 As tarefas são ordenadas de forma automática pela proximidade do vencimento.  
-![Organização](./prints/Captura_de_tela_2025-02-24_225232.png)
+![Organização](prints/Captura_de_tela_2025-02-24_225232.png)
 
 ---
 
 ### 🌙 Interface com Suporte a Temas  
 Visual moderno com suporte para modo escuro.  
-![Modo Escuro](./prints/Captura_de_tela_2025-02-24_225255.png)
+![Modo Escuro](prints/Captura_de_tela_2025-02-24_225255.png)
 
 ---
-
-> 💡 **Dica:** Armazene suas capturas de tela na pasta `prints/` no repositório para manter tudo bem organizado.
