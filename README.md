@@ -89,6 +89,7 @@ Abaixo, algumas imagens demonstrando o funcionamento do aplicativo:
 
 ### 🧾 Tela Principal – Lista de Tarefas  
 Tela de boas-vindas do aplicativo "Gerenciador de Tarefas", exibindo o nome do app, o ícone principal e o botão “Entrar”. 
+
 ![Tela Principal](prints/Captura_de_tela_2025-02-24_225009.png)
 
 ---
